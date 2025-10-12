@@ -1,0 +1,40 @@
+.sidebar {
+  width: 280px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.nav-item {
+  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  display: flex;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
+  color: white;
+}
+
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-item.active:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    position: relative;
+  }
+}

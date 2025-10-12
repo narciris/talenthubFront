@@ -1,0 +1,81 @@
+<div class="card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+  <div class="flex items-start space-x-4">
+    <!-- Avatar -->
+    <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0 avatar-gradient">
+      <!-- CORRECCIÓN: Llamar al getter del componente -->
+      {{ authorInitials }}
+    </div>
+
+    <div class="flex-1">
+      <!-- Author and Time -->
+      <div class="flex items-center space-x-2 mb-2">
+        <h3 class="font-semibold text-gray-900">{{ post.author.name }}</h3>
+        <span class="text-sm text-gray-500">{{ getTimeAgo(post.createdAt) }}</span>
+      </div>
+
+      <!-- Post Title -->
+      <h4 class="text-lg font-medium mb-3 text-gray-900">{{ post.title }}</h4>
+
+      <!-- Post Content -->
+      <p class="text-gray-600 mb-4 leading-relaxed">{{ post.content }}</p>
+
+      <!-- Interaction Buttons -->
+      <div class="flex items-center space-x-6 mb-4">
+        <!-- Like Button -->
+        <button 
+          (click)="toggleLike()"
+          class="like-btn flex items-center space-x-2 transition-colors"
+          [class.liked]="post.isLiked">
+          <svg class="w-5 h-5" [attr.fill]="post.isLiked ? 'currentColor' : 'none'" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+            </path>
+          </svg>
+          <span class="font-medium">{{ post.likes }} likes</span>
+        </button>
+
+        <!-- Comments Button -->
+        <button class="flex items-center space-x-2 text-gray-500 hover:text-purple-600 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+            </path>
+          </svg>
+          <span class="font-medium">{{ post.commentsCount }} comentarios</span>
+        </button>
+      </div>
+
+      <!-- Comments Section -->
+      <div class="border-t pt-4">
+        <!-- Existing Comments -->
+        <div class="space-y-3 mb-4">
+          <div *ngFor="let comment of post.comments" class="bg-gray-50 rounded-lg p-3">
+            <div class="flex items-center space-x-2 mb-1">
+              <span class="font-medium text-sm text-gray-900">{{ comment.author.name }}</span>
+              <span class="text-xs text-gray-500">{{ getTimeAgo(comment.createdAt) }}</span>
+            </div>
+            <p class="text-sm text-gray-700">{{ comment.content }}</p>
+          </div>
+        </div>
+
+        <!-- Comment Input -->
+        <div class="flex space-x-3">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 avatar-gradient">
+            JD
+          </div>
+          <input 
+            type="text" 
+            placeholder="Escribe un comentario..." 
+            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            [(ngModel)]="commentText"
+            (keyup.enter)="addComment()">
+          <button 
+            (click)="addComment()"
+            class="btn-primary text-white px-4 py-2 rounded-lg font-medium transition-colors hover:scale-105">
+            Comentar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
