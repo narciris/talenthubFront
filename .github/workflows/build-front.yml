@@ -28,38 +28,43 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --configuration production
 
-      # Agregar clave SSH (para evitar problemas de formato multilínea)
-      - name: Add SSH key to agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+      # Preparar clave SSH para conexión
+      - name: Prepare SSH Key and known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-      # Limpiar carpeta destino
+      # Limpiar carpeta del servidor antes del deploy
       - name: Clean remote directory
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
+          key_path: ~/.ssh/deploy_key
           script: |
             rm -rf /var/www/talenthub/talentFront/dist/browser/*
 
-      # Subir build por SCP
+      # Subir build al servidor
       - name: Deploy to server via SCP
         uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
+          key_path: ~/.ssh/deploy_key
           source: "dist/talent-hub/browser/*"
           target: "/var/www/talenthub/talentFront/dist/browser"
           strip_components: 0
           overwrite: true
 
-      # Permisos para Apache
+      # Corregir permisos para Apache
       - name: Fix permissions
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
+          key_path: ~/.ssh/deploy_key
           script: |
             sudo chown -R apache:apache /var/www/talenthub/talentFront
             sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
