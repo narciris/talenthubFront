@@ -1,84 +1,66 @@
 name: Deploy front angular
+
 on:
-push:
-branches:
-- main
+  push:
+    branches:
+      - main
 
 jobs:
-build-and-deploy:
-runs-on: ubuntu-latest
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
-steps:
-  # Clonar repo
-  - name: Checkout repository
-    uses: actions/checkout@v4
+    steps:
+      # Clonar el repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  # Instalar Node
-  - name: Set up Node
-    uses: actions/setup-node@v4
-    with:
-      node-version: 20
+      # Instalar Node
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-  # Instalar dependencias
-  - name: Install dependencies
-    run: npm ci
+      # Instalar dependencias
+      - name: Install dependencies
+        run: npm ci
 
-  # Compilar Angular
-  - name: Build Angular app
-    run: npm run build -- --configuration production
+      # Compilar Angular
+      - name: Build Angular app
+        run: npm run build -- --configuration production
 
-  # -----------------------------------------------------------------
-  # SOLUCIÓN DEL PROBLEMA DE SSH: Cargar la clave en el Agente SSH
-  # Esta acción maneja correctamente la clave multilínea del secreto.
-  # -----------------------------------------------------------------
-  - name: Add SSH key to agent
-    uses: webfactory/ssh-agent@v0.9.0
-    with:
-      ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-      # El Agente SSH agrega automáticamente el host al known_hosts
+      # Agregar clave SSH (para evitar problemas de formato multilínea)
+      - name: Add SSH key to agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
 
-  # -----------------------------------------------------------------
-  # El paso 'Prepare SSH' original ya no es necesario,
-  # pero lo dejo comentado en caso de que lo necesites para otras configuraciones:
-  # - name: Prepare SSH
-  #   run: |
-  #     mkdir -p ~/.ssh
-  #     ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
-  # -----------------------------------------------------------------
+      # Limpiar carpeta destino
+      - name: Clean remote directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          script: |
+            rm -rf /var/www/talenthub/talentFront/dist/browser/*
 
-  # Limpiar carpeta destino ANTES de copiar (Usando el agente SSH)
-  - name: Clean remote directory
-    uses: appleboy/ssh-action@v1.0.3
-    with:
-      host: ${{ secrets.SERVER_HOST }}
-      username: ${{ secrets.SERVER_USERNAME }}
-      # IMPORTANTE: Se elimina la entrada 'key' porque ahora usa el agente
-      # key: ${{ secrets.SERVER_SSH_KEY }}
-      script: |
-        rm -rf /var/www/talenthub/talentFront/dist/browser/*
+      # Subir build por SCP
+      - name: Deploy to server via SCP
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          source: "dist/talent-hub/browser/*"
+          target: "/var/www/talenthub/talentFront/dist/browser"
+          strip_components: 0
+          overwrite: true
 
-  # Subir archivos compilados (Usando el agente SSH)
-  - name: Deploy to server via SCP
-    uses: appleboy/scp-action@v1
-    with:
-      host: ${{ secrets.SERVER_HOST }}
-      username: ${{ secrets.SERVER_USERNAME }}
-      # IMPORTANTE: Se elimina la entrada 'key' porque ahora usa el agente
-      # key: ${{ secrets.SERVER_SSH_KEY }}
-      source: "dist/talent-hub/browser/*"
-      target: "/var/www/talenthub/talentFront/dist/browser"
-      strip_components: 0
-      overwrite: true
-
-  # Asignar permisos correctos para Apache (Usando el agente SSH)
-  - name: Fix permissions
-    uses: appleboy/ssh-action@v1.0.3
-    with:
-      host: ${{ secrets.SERVER_HOST }}
-      username: ${{ secrets.SERVER_USERNAME }}
-      # IMPORTANTE: Se elimina la entrada 'key' porque ahora usa el agente
-      # key: ${{ secrets.SERVER_SSH_KEY }}
-      script: |
-        sudo chown -R apache:apache /var/www/talenthub/talentFront
-        sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
-        sudo find /var/www/talenthub/talentFront -type f -exec chmod 644 {} \;
+      # Permisos para Apache
+      - name: Fix permissions
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          script: |
+            sudo chown -R apache:apache /var/www/talenthub/talentFront
+            sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
+            sudo find /var/www/talenthub/talentFront -type f -exec chmod 644 {} \;
