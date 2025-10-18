@@ -26,10 +26,12 @@ jobs:
       - name: Crear archivo de clave SSH
         run: |
           mkdir -p ~/.ssh
-          printf "${{ secrets.SERVER_SSH_KEY }}" | tr -d '\r' > ~/.ssh/temp_key
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/temp_key
+          sed -i 's/\\n/\n/g' ~/.ssh/temp_key
           chmod 600 ~/.ssh/temp_key
           echo "✅ Clave SSH creada, primeras 5 líneas:"
           head -n 5 ~/.ssh/temp_key
+
 
       # 4️⃣ Probar conexión SSH manualmente
       - name: Test SSH Connection
