@@ -28,21 +28,21 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --configuration production
 
-      # Preparar clave SSH para conexión
+      # SOLUCIÓN DEFINITIVA - Preparar clave SSH
       - name: Prepare SSH Key and known_hosts
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+          mkdir -p ./.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ./.ssh/deploy_key
+          chmod 600 ./.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ./.ssh/known_hosts
 
-      # Limpiar carpeta del servidor antes del deploy
+      # Limpiar carpeta remota antes del deploy
       - name: Clean remote directory
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ~/.ssh/deploy_key
+          key_path: ./.ssh/deploy_key
           script: |
             rm -rf /var/www/talenthub/talentFront/dist/browser/*
 
@@ -52,19 +52,19 @@ jobs:
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ~/.ssh/deploy_key
+          key_path: ./.ssh/deploy_key
           source: "dist/talent-hub/browser/*"
           target: "/var/www/talenthub/talentFront/dist/browser"
           strip_components: 0
           overwrite: true
 
-      # Corregir permisos para Apache
+      # Permisos para Apache
       - name: Fix permissions
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ~/.ssh/deploy_key
+          key_path: ./.ssh/deploy_key
           script: |
             sudo chown -R apache:apache /var/www/talenthub/talentFront
             sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
