@@ -25,6 +25,11 @@ jobs:
           echo "SERVER_HOST: ${{ secrets.SERVER_HOST && '✅ OK' || '❌ FALTA' }}"
           echo "SERVER_USERNAME: ${{ secrets.SERVER_USERNAME && '✅ OK' || '❌ FALTA' }}"
           echo "SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY && '✅ OK' || '❌ FALTA' }}"
+      - name: Crear archivo de clave SSH
+        run: |
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/temp_key
+          chmod 600 ~/.ssh/temp_key
+          cat ~/.ssh/temp_key | head -n 5   # Solo muestra las primeras 5 líneas
 
       - name: Setup Node
         uses: actions/setup-node@v4
