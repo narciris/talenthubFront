@@ -17,7 +17,7 @@ jobs:
         run: |
           echo "✅ Verificando que existan secrets..."
           echo "SERVER_HOST: ${{ secrets.SERVER_HOST && '✅ OK' || '❌ FALTA' }}"
-          echo "SERVER_USER: ${{ secrets.SERVER_USER && '✅ OK' || '❌ FALTA' }}"
+          echo "SERVER_USERNAME: ${{ secrets.SERVER_USERNAME && '✅ OK' || '❌ FALTA' }}"
           echo "SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY && '✅ OK' || '❌ FALTA' }}"
 
       - name: Setup Node
@@ -35,7 +35,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
+          username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           debug: true
