@@ -16,7 +16,7 @@ jobs:
       - name: verificar secretos
         run: | 
             echo "SERVER_HOST: ${{ secrets.SERVER_HOST }}"
-            echo "SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }"
+            echo "SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}"
             echo "SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}"
 
       - name: Debug Secrets (solo nombres, no valores)
