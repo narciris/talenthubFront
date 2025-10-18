@@ -1,38 +1,66 @@
 name: Deploy front angular
 on:
   push:
-    branches: 
-    - main
+    branches:
+      - main
+
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest # Corregido: latest
+    runs-on: ubuntu-latest
+
     steps:
-      # clonar el repo
-      - name: checkout repository
+      # Clonar el repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # instalar node y angular CLI 
+      # Instalar Node
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          
-      # instalar dependicias
+
+      # Instalar dependencias
       - name: Install dependencies
         run: npm ci
 
-      # Compilar para produccion
+      # Compilar Angular para producción
       - name: Build Angular app
         run: npm run build -- --configuration production
 
-      ## copiar archivos compilados al servidor 
-      - name: Deploy to server via SSH
+      # Agregar servidor a known_hosts para evitar host key error
+      - name: Add server to known_hosts
+        run: ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      # Limpiar carpeta destino antes del deploy
+      - name: Clean remote directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            rm -rf /var/www/talenthub-front/dist/talent-hub/browser/*
+
+      # Copiar archivos al servidor por SCP
+      - name: Deploy to server via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          # Ajuste de ruta: incluye la carpeta 'browser' y el contenido
-          source: "dist/talent-hub/browser/*" 
-          # Ajuste de ruta: debe coincidir con el DocumentRoot de Apache
-          target: "/var/www/talenthub-front/dist/talent-hub/browser"
+          port: 22
+          source: "dist/talent-hub/browser/*"
+          target: "/var/www/talenthub/talentFront/dist/browser"
+          overwrite: true
+
+      # Dar permisos para Apache
+      - name: Fix permissions
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            sudo chown -R apache:apache /var/www/talenthub-front
+            sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
+            sudo find /var/www/talenthub/talentFront -type f -exec chmod 644 {} \;
