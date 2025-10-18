@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Clonar el repo
+      # Clonar repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -23,15 +23,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Compilar Angular para producción
+      # Compilar Angular
       - name: Build Angular app
         run: npm run build -- --configuration production
 
-      # Agregar servidor a known_hosts para evitar host key error
-      - name: Add server to known_hosts
-        run: ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+      # Crear known_hosts
+      - name: Prepare SSH
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-      # Limpiar carpeta destino antes del deploy
+      # Limpiar carpeta destino ANTES de copiar
       - name: Clean remote directory
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -39,21 +41,21 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            rm -rf /var/www/talenthub-front/dist/talent-hub/browser/*
+            rm -rf /var/www/talenthub/talentFront/dist/browser/*
 
-      # Copiar archivos al servidor por SCP
+      # Subir archivos compilados
       - name: Deploy to server via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          port: 22
           source: "dist/talent-hub/browser/*"
           target: "/var/www/talenthub/talentFront/dist/browser"
+          strip_components: 0
           overwrite: true
 
-      # Dar permisos para Apache
+      # Asignar permisos correctos para Apache
       - name: Fix permissions
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -61,6 +63,6 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            sudo chown -R apache:apache /var/www/talenthub-front
+            sudo chown -R apache:apache /var/www/talenthub/talentFront
             sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
             sudo find /var/www/talenthub/talentFront -type f -exec chmod 644 {} \;
