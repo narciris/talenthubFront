@@ -1,71 +1,83 @@
 name: Deploy front angular
-
 on:
-  push:
-    branches:
-      - main
+push:
+branches:
+- main
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+build-and-deploy:
+runs-on: ubuntu-latest
 
-    steps:
-      # Clonar el repositorio
-      - name: Checkout repository
-        uses: actions/checkout@v4
+steps:
+  # Clonar el repositorio
+  - name: Checkout repository
+    uses: actions/checkout@v4
 
-      # Instalar Node
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+  # Instalar Node
+  - name: Set up Node
+    uses: actions/setup-node@v4
+    with:
+      node-version: 20
 
-      # Instalar dependencias
-      - name: Install dependencies
-        run: npm ci
+  # Instalar dependencias
+  - name: Install dependencies
+    run: npm ci
 
-      # Compilar Angular
-      - name: Build Angular app
-        run: npm run build -- --configuration production
+  # Compilar Angular
+  - name: Build Angular app
+    run: npm run build -- --configuration production
 
-      # SOLUCIÓN DEFINITIVA - Preparar clave SSH
-      - name: Prepare SSH Key and known_hosts
-        run: |
-          mkdir -p ./.ssh
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ./.ssh/deploy_key
-          chmod 600 ./.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ./.ssh/known_hosts
+  # -----------------------------------------------------------------
+  # SOLUCIÓN DEFINITIVA: Escribir la clave SSH en un archivo
+  # USANDO RUTA ABSOLUTA ($GITHUB_WORKSPACE) para resolver permisos.
+  # -----------------------------------------------------------------
+  - name: Prepare SSH Key and known_hosts
+    run: |
+      KEY_PATH="$GITHUB_WORKSPACE/.ssh/deploy_key"
+      KNOWN_HOSTS_PATH="$GITHUB_WORKSPACE/.ssh/known_hosts"
+      
+      # 1. Crear el directorio SSH
+      mkdir -p "$GITHUB_WORKSPACE/.ssh"
+      
+      # 2. Escribir la clave en la ruta absoluta
+      echo "${{ secrets.SERVER_SSH_KEY }}" > "$KEY_PATH"
+      
+      # 3. Asignar permisos seguros (chmod 600)
+      chmod 600 "$KEY_PATH"
+      
+      # 4. Escanear el host y añadirlo a known_hosts
+      ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> "$KNOWN_HOSTS_PATH"
 
-      # Limpiar carpeta remota antes del deploy
-      - name: Clean remote directory
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ./.ssh/deploy_key
-          script: |
-            rm -rf /var/www/talenthub/talentFront/dist/browser/*
+  # Limpiar carpeta destino ANTES de copiar (Usando key_path con GITHUB_WORKSPACE)
+  - name: Clean remote directory
+    uses: appleboy/ssh-action@v1.0.3
+    with:
+      host: ${{ secrets.SERVER_HOST }}
+      username: ${{ secrets.SERVER_USERNAME }}
+      key_path: ${{ env.GITHUB_WORKSPACE }}/.ssh/deploy_key # RUTA ABSOLUTA CORREGIDA
+      script: |
+        rm -rf /var/www/talenthub/talentFront/dist/browser/*
 
-      # Subir build al servidor
-      - name: Deploy to server via SCP
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ./.ssh/deploy_key
-          source: "dist/talent-hub/browser/*"
-          target: "/var/www/talenthub/talentFront/dist/browser"
-          strip_components: 0
-          overwrite: true
+  # Subir archivos compilados (Usando key_path con GITHUB_WORKSPACE)
+  - name: Deploy to server via SCP
+    uses: appleboy/scp-action@v1
+    with:
+      host: ${{ secrets.SERVER_HOST }}
+      username: ${{ secrets.SERVER_USERNAME }}
+      key_path: ${{ env.GITHUB_WORKSPACE }}/.ssh/deploy_key # RUTA ABSOLUTA CORREGIDA
+      source: "dist/talent-hub/browser/*"
+      target: "/var/www/talenthub/talentFront/dist/browser"
+      strip_components: 0
+      overwrite: true
 
-      # Permisos para Apache
-      - name: Fix permissions
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ./.ssh/deploy_key
-          script: |
-            sudo chown -R apache:apache /var/www/talenthub/talentFront
-            sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
-            sudo find /var/www/talenthub/talentFront -type f -exec chmod 644 {} \;
+  # Asignar permisos correctos para Apache (Usando key_path con GITHUB_WORKSPACE)
+  - name: Fix permissions
+    uses: appleboy/ssh-action@v1.0.3
+    with:
+      host: ${{ secrets.SERVER_HOST }}
+      username: ${{ secrets.SERVER_USERNAME }}
+      key_path: ${{ env.GITHUB_WORKSPACE }}/.ssh/deploy_key # RUTA ABSOLUTA CORREGIDA
+      script: |
+        sudo chown -R apache:apache /var/www/talenthub/talentFront
+        sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
+        sudo find /var/www/talenthub/talentFront -type f -exec chmod 644 {} \;
