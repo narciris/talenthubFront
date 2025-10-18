@@ -8,8 +8,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      SSH_KEY_PATH: ${{ github.workspace }}/.ssh/deploy_key
 
     steps:
       - name: Checkout repository
@@ -26,19 +24,19 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --configuration production
 
-      - name: Prepare SSH Key
+      - name: Configure SSH
         run: |
-          mkdir -p ${{ github.workspace }}/.ssh
-          echo "${{ secrets.SERVER_SSH_KEY }}" > $SSH_KEY_PATH
-          chmod 600 $SSH_KEY_PATH
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ${{ github.workspace }}/.ssh/known_hosts
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
       - name: Clean remote directory
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ${{ env.SSH_KEY_PATH }}
+          key_path: ~/.ssh/deploy_key
           script: rm -rf /var/www/talenthub/talentFront/dist/browser/*
 
       - name: Deploy files via SCP
@@ -46,7 +44,7 @@ jobs:
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ${{ env.SSH_KEY_PATH }}
+          key_path: ~/.ssh/deploy_key
           source: "dist/talent-hub/browser/*"
           target: "/var/www/talenthub/talentFront/dist/browser"
 
@@ -55,7 +53,7 @@ jobs:
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ${{ env.SSH_KEY_PATH }}
+          key_path: ~/.ssh/deploy_key
           script: |
             sudo chown -R apache:apache /var/www/talenthub/talentFront
             sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
