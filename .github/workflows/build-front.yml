@@ -1,4 +1,4 @@
-name: Deploy front angular
+name: Deploy Front Angular
 
 on:
   push:
@@ -10,38 +10,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout del código
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: verificar secretos
-        run: | 
-            echo "SERVER_HOST: ${{ secrets.SERVER_HOST }}"
-            echo "SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}"
-            echo "SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}"
-
-      - name: Debug Secrets (solo nombres, no valores)
+      # 2️⃣ Verificar existencia de secretos
+      - name: Debug Secrets (solo existencia, no valores)
         run: |
           echo "✅ Verificando que existan secrets..."
           echo "SERVER_HOST: ${{ secrets.SERVER_HOST && '✅ OK' || '❌ FALTA' }}"
           echo "SERVER_USERNAME: ${{ secrets.SERVER_USERNAME && '✅ OK' || '❌ FALTA' }}"
           echo "SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY && '✅ OK' || '❌ FALTA' }}"
+
+      # 3️⃣ Crear archivo de clave SSH temporal
       - name: Crear archivo de clave SSH
         run: |
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/temp_key
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" | tr -d '\r' > ~/.ssh/temp_key
           chmod 600 ~/.ssh/temp_key
-          cat ~/.ssh/temp_key | head -n 5   # Solo muestra las primeras 5 líneas
+          echo "✅ Clave SSH creada, primeras 5 líneas:"
+          head -n 5 ~/.ssh/temp_key
 
+      # 4️⃣ Probar conexión SSH manualmente
+      - name: Test SSH Connection
+        run: |
+          echo "🔹 Probando conexión SSH..."
+          ssh -i ~/.ssh/temp_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "echo '✅ SSH OK'"
+
+      # 5️⃣ Configurar Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      # 6️⃣ Instalar dependencias
       - name: Install dependencies
         run: npm install
 
+      # 7️⃣ Construir Angular App
       - name: Build Angular App
         run: npm run build --if-present
 
+      # 8️⃣ Deploy usando SSH
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
