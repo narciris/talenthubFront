@@ -1,4 +1,4 @@
-name: Deploy Angular App to EC2
+name: Deploy front angular
 
 on:
   push:
@@ -6,53 +6,40 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Debug Secrets (solo nombres, no valores)
+        run: |
+          echo "✅ Verificando que existan secrets..."
+          echo "SERVER_HOST: ${{ secrets.SERVER_HOST && '✅ OK' || '❌ FALTA' }}"
+          echo "SERVER_USER: ${{ secrets.SERVER_USER && '✅ OK' || '❌ FALTA' }}"
+          echo "SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY && '✅ OK' || '❌ FALTA' }}"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '20'
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install
 
-      - name: Build Angular project
+      - name: Build Angular App
         run: npm run build --if-present
 
-      - name: Clean remote directory
+      - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
+          username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          debug: true
           script: |
+            echo "✅ Conexión SSH exitosa"
             rm -rf /var/www/talenthub/talentFront/dist/browser/*
             echo "✅ Carpeta remota limpiada"
-
-      - name: Upload build files to server
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "dist/browser/*"
-          target: "/var/www/talenthub/talentFront/dist/browser"
-          overwrite: true
-          strip_components: 0
-
-      - name: Fix permissions
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            sudo chown -R apache:apache /var/www/talenthub/talentFront
-            sudo find /var/www/talenthub/talentFront -type d -exec chmod 755 {} \;
-            sudo find /var/www/talenthub/talentFront -type f -exec chmod 644 {} \;
-            echo "✅ Permisos corregidos"
