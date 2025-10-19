@@ -75,7 +75,7 @@ jobs:
       - name: Upload files via SCP
         run: |
           echo " Subiendo archivos a servidor..."
-          scp -i ~/.ssh/temp_key -r -o StrictHostKeyChecking=no dist/browser/* \
+          scp -i ~/.ssh/temp_key -r -o StrictHostKeyChecking=no dist/talent-hub/browser/* \
             ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/talenthub/talentFront/dist/browser/
           echo "Archivos subidos exitosamente"
 
