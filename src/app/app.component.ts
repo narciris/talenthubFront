@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/components/header/header.component';
-import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
+import { SidebarComponent } from './core/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,HeaderComponent,SidebarComponent],
+  imports: [RouterOutlet, HeaderComponent, SidebarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'talentHub';
+  title = 'talentConnect';
 }

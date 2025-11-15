@@ -1,0 +1,16 @@
+<div style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+      <h2>Upload de Archivos</h2>
+      
+      <p-toast></p-toast>
+      
+      <p-fileUpload 
+        [customUpload]="true"
+        (uploadHandler)="subirArchivos($event)"
+        [multiple]="true"
+        accept="image/*"
+        [maxFileSize]="5000000"
+        chooseLabel="Seleccionar"
+        uploadLabel="Subir"
+        cancelLabel="Cancelar">
+      </p-fileUpload>
+    </div>

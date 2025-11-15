@@ -76,7 +76,7 @@ jobs:
         run: |
           echo " Subiendo archivos a servidor..."
           scp -i ~/.ssh/temp_key -r -o StrictHostKeyChecking=no dist/talent-hub/browser/* \
-            ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/talenthub/talentFront/dist/browser/
+            ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/var/www/talentconnect/talentFront/dist/browser/
           echo "Archivos subidos exitosamente"
 
       # 1️⃣1️⃣ Limpiar y reorganizar en servidor
@@ -88,9 +88,9 @@ jobs:
           echo "🔧 Limpiando servidor..."
           
           # Verificar que los archivos se subieron
-          if [ ! -f "/var/www/talenthub/talentFront/dist/browser/index.html" ]; then
+          if [ ! -f "/var/www/talentconnect/talentFront/dist/browser/index.html" ]; then
             echo "ERROR: index.html no encontrado en servidor"
-            ls -la /var/www/talenthub/talentFront/dist/browser/
+            ls -la /var/www/talentconnect/talentFront/dist/browser/
             exit 1
           fi
           
@@ -98,11 +98,11 @@ jobs:
           
           # Mostrar archivos subidos
           echo " Archivos en servidor:"
-          ls -la /var/www/talenthub/talentFront/dist/browser/ | head -15
+          ls -la /var/www/talentconnect/talentFront/dist/browser/ | head -15
           
           # Actualizar permisos
-          sudo chown -R apache:apache /var/www/talenthub/talentFront/dist/
-          sudo chmod -R 755 /var/www/talenthub/talentFront/dist/
+          sudo chown -R apache:apache /var/www/talentconnect/talentFront/dist/
+          sudo chmod -R 755 /var/www/talentconnect/talentFront/dist/
           
           echo " Permisos actualizados"
           
