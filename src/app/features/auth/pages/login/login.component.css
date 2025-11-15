@@ -1,0 +1,159 @@
+:host {
+  --color-primary: #8B5CF6;
+  --color-primary-dark: #A855F7;
+  --color-primary-light: #C4B5FD;
+  --color-accent: #EC4899;
+}
+
+/* Animación del fondo con gradiente */
+.morphing-bg {
+  background: linear-gradient(-45deg, var(--color-primary), var(--color-primary-dark), var(--color-accent), var(--color-primary-light));
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Animación de la tarjeta flotante */
+.floating-card {
+  animation: cardFloat 6s ease-in-out infinite;
+  backdrop-filter: blur(20px);
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0px) rotateX(0deg); }
+  50% { transform: translateY(-10px) rotateX(2deg); }
+}
+
+/* Efectos interactivos en inputs */
+.interactive-input {
+  position: relative;
+  overflow: hidden;
+}
+
+.interactive-input::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.interactive-input:focus-within::before {
+  left: 100%;
+}
+
+/* Botón con efecto pulse */
+.pulse-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  transition: all 0.3s ease;
+}
+
+.pulse-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+}
+
+.pulse-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.pulse-button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Partículas flotantes */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(196, 181, 253, 0.8);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat 8s linear infinite;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(196, 181, 253, 0.5);
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Botones sociales */
+.social-button {
+  transition: all 0.3s ease;
+}
+
+.social-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Animación del logo */
+.logo-animation {
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+  from {
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+  }
+  to {
+    text-shadow: 0 0 30px rgba(139, 92, 246, 0.8), 0 0 40px rgba(236, 72, 153, 0.3);
+  }
+}
+
+/* Animación de entrada */
+.slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Delays escalonados */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }

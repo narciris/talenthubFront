@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { MENU_ITEMS } from '../../config/menu-items';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,23 +10,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-user = {
+  user = {
     name: 'Juan Desarrollador',
-    email: 'juan@talenthub.com',
+    email: 'juan@talentconnect.com',
     initials: 'JD'
   };
 
-  menuItems = [
-    {
-      label: 'Foro',
-      icon: 'forum',
-      route: '/forum'
-    },
-    {
-      label: 'Currículum',
-      icon: 'curriculum',
-      route: '/curriculum'
-    }
-  ];
+  menuItems = MENU_ITEMS;
 
 }

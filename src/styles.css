@@ -1,2 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
+:root {
+  /* Colores principales */
+  --color-primary: #8B5CF6;
+  --color-primary-dark: #A855F7;
+  --color-primary-light: #C4B5FD;
+  
+  /* Colores de acento */
+  --color-accent: #EC4899;
+  --color-accent-light: #F9A8D4;
+  
+  /* Colores neutros */
+  --color-bg: #F9FAFB;
+  --color-surface: #FFFFFF;
+  --color-border: rgba(255, 255, 255, 0.2);
+  
+  /* Texto */
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-text-inverse: #FFFFFF;
+  
+  /* Estados */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Clases de utilidad para usar con la paleta */
+.bg-primary { background-color: var(--color-primary); }
+.bg-primary-dark { background-color: var(--color-primary-dark); }
+.bg-primary-light { background-color: var(--color-primary-light); }
+
+.text-primary { color: var(--color-primary); }
+.text-primary-dark { color: var(--color-primary-dark); }
+
+.border-primary { border-color: var(--color-primary); }
+
+/* Gradiente principal */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+}

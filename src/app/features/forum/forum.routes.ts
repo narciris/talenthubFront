@@ -3,7 +3,7 @@ import { ForumListComponent } from "./components/forum-list/forum-list.component
 
 export const FORUM_ROUTES:Routes = [
     {path: '',
-        component: ForumListComponent
+        loadComponent: () => import('../forum/pages/home/home.component').then(m => m.HomeComponent)
     }
 
 ]
