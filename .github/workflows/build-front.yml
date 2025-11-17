@@ -70,6 +70,15 @@ jobs:
             exit 1
           fi
           echo " Carpeta dist verificada"
+      # Limpiar servidor antes de subir
+      - name: Clean server folder before upload
+        run: |
+          echo "limpiando carpeta dist/browser en servidor..."
+          ssh -i ~/.ssh/temp_key -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "
+            sudo rm -rf /var/www/talenthub/talentFront/dist/browser/*
+          "
+          echo " Carpeta limpia"
+           
 
       # 🔟 Subir archivos via SCP
       - name: Upload files via SCP
