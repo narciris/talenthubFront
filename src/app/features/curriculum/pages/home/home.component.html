@@ -1,1 +1,295 @@
-<p>home works!</p>
+<div class="min-h-screen bg-gray-50 p-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-3xl font-bold text-gray-800">Gestión de Usuarios</h1>
+          <p-button 
+            label="Agregar Usuario" 
+            icon="pi pi-plus" 
+            styleClass="p-button-primary"
+          />
+        </div>
+
+        <!-- Controles Globales -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Configuración Global</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div class="flex items-center gap-3">
+                <i class="pi pi-ban text-red-500 text-2xl"></i>
+                <div>
+                  <label class="text-base font-semibold text-gray-800 block">
+                    Bloquear Permisos No Justificados para Todos
+                  </label>
+                  <p class="text-sm text-gray-500">Aplica restricción a todos los usuarios</p>
+                </div>
+              </div>
+              <p-inputSwitch [(ngModel)]="globalPermisos"
+                (onChange)="changeGlobalPermits()"
+             
+               />
+            </div>
+
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div class="flex items-center gap-3">
+                <i class="pi pi-dollar text-orange-500 text-2xl"></i>
+                <div>
+                  <label class="text-base font-semibold text-gray-800 block">
+                    Revocar Bonificaciones para Todos
+                  </label>
+                  <p class="text-sm text-gray-500">Aplica revocación a todos los usuarios</p>
+                </div>
+              </div>
+              <p-inputSwitch [(ngModel)]="globalBonificaciones"
+                   (onChange)="changeGlobalBonds()"        
+               />
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <!-- Card Usuario 1 -->
+          <p-card styleClass="shadow-lg hover:shadow-xl transition-shadow">
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                  J
+                </div>
+                <div>
+                  <h3 class="font-semibold text-gray-800 text-lg">Juan Pérez</h3>
+                  <p class="text-sm text-gray-500">juan&#64;example.com</p>
+                </div>
+              </div>
+
+              <div class="border-t pt-4 space-y-4">
+                <div class="flex items-center justify-between">
+                  <label 
+                     class="text-sm font-medium"
+                [class.text-gray-700]="!disableBonds"
+                [class.text-gray-400]="disableBonds"
+                [class.cursor-not-allowed]="disableBonds"
+                >
+                    Revocar Bonificaciones
+                  </label>
+                  <p-inputSwitch [(ngModel)]="checked1"
+                  [readonly]="disableBonds"
+                  [styleClass]="disableBonds ? 'visual-enabled' : ''"
+                   />
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <label 
+                class="text-sm font-medium"
+                [class.text-gray-700]="!disabledItems"
+                [class.text-gray-400]="disabledItems"
+                [class.cursor-not-allowed]="disabledItems"
+  >             
+                    Permisos No Justificados
+                  </label>
+                  <p-inputSwitch [(ngModel)]="checked2" 
+                   [readonly]="disabledItems"
+                     [styleClass]="disabledItems ? 'visual-enabled' : ''"
+                   />
+                   
+                </div>
+              </div>
+
+              <div class="flex gap-2 pt-2">
+                <p-button 
+                  icon="pi pi-pencil" 
+                  label="Editar"
+                  styleClass="p-button-text p-button-sm flex-1"
+                />
+                <p-button 
+                  icon="pi pi-trash" 
+                  label="Eliminar"
+                  styleClass="p-button-text p-button-danger p-button-sm flex-1"
+                />
+              </div>
+            </div>
+          </p-card>
+
+          <!-- Card Usuario 2 -->
+          <p-card styleClass="shadow-lg hover:shadow-xl transition-shadow">
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                  M
+                </div>
+                <div>
+                  <h3 class="font-semibold text-gray-800 text-lg">María García</h3>
+                  <p class="text-sm text-gray-500">maria&#64;example.com</p>
+                </div>
+              </div>
+
+              <div class="border-t pt-4 space-y-4">
+                <div class="flex items-center justify-between">
+                  <label 
+                  class="text-sm font-medium"
+                [class.text-gray-700]="!disableBonds"
+                [class.text-gray-400]="disableBonds"
+                [class.cursor-not-allowed]="disableBonds"
+                  >
+                    Revocar Bonificaciones
+                  </label>
+                  <p-inputSwitch [(ngModel)]="checked3"
+                  [readonly]="disableBonds"
+                  [styleClass]="disableBonds ? 'visual-enabled' : ''"
+                  />
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <label 
+                    class="text-sm font-medium"
+                [class.text-gray-700]="!disabledItems"
+                [class.text-gray-400]="disabledItems"
+                [class.cursor-not-allowed]="disabledItems"
+  >             
+                  
+                    Permisos No Justificados
+                  </label>
+                  <p-inputSwitch [(ngModel)]="checked4"
+                                 [readonly]="disabledItems"
+                                [styleClass]="disabledItems ? 'visual-enabled' : ''"
+
+                   />
+                </div>
+              </div>
+
+              <div class="flex gap-2 pt-2">
+                <p-button 
+                  icon="pi pi-pencil" 
+                  label="Editar"
+                  styleClass="p-button-text p-button-sm flex-1"
+                />
+                <p-button 
+                  icon="pi pi-trash" 
+                  label="Eliminar"
+                  styleClass="p-button-text p-button-danger p-button-sm flex-1"
+                />
+              </div>
+            </div>
+          </p-card>
+
+          <!-- Card Usuario 3 -->
+          <p-card styleClass="shadow-lg hover:shadow-xl transition-shadow">
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                
+                </div>
+                <div>
+                  <h3 class="font-semibold text-gray-800 text-lg">Carlos Rodríguez</h3>
+                  <p class="text-sm text-gray-500">carlos&#64;example.com</p>
+                </div>
+              </div>
+
+              <div class="border-t pt-4 space-y-4">
+                <div class="flex items-center justify-between">
+                  <label 
+                  class="text-sm font-medium"
+                [class.text-gray-700]="!disableBonds"
+                [class.text-gray-400]="disableBonds"
+                [class.cursor-not-allowed]="disableBonds">
+                    Revocar Bonificaciones
+                  </label>
+                  <p-inputSwitch [(ngModel)]="checked5"
+                     [readonly]="disableBonds"
+                  [styleClass]="disableBonds ? 'visual-enabled' : ''"
+                   />
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <label 
+                    class="text-sm font-medium"
+                [class.text-gray-700]="!disabledItems"
+                [class.text-gray-400]="disabledItems"
+                [class.cursor-not-allowed]="disabledItems"
+>             
+            
+                Permisos No Justificados
+              </label>
+              <p-inputSwitch [(ngModel)]="checked6"
+                            [readonly]="disabledItems"
+                            [styleClass]="disabledItems ? 'visual-enabled' : ''"
+
+                   />
+                </div>
+              </div>
+
+              <div class="flex gap-2 pt-2">
+                <p-button 
+                  icon="pi pi-pencil" 
+                  label="Editar"
+                  styleClass="p-button-text p-button-sm flex-1"
+                />
+                <p-button 
+                  icon="pi pi-trash" 
+                  label="Eliminar"
+                  styleClass="p-button-text p-button-danger p-button-sm flex-1"
+                />
+              </div>
+            </div>
+          </p-card>
+
+          <!-- Card Usuario 4 -->
+          <p-card styleClass="shadow-lg hover:shadow-xl transition-shadow">
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                  A
+                </div>
+                <div>
+                  <h3 class="font-semibold text-gray-800 text-lg">Ana Martínez</h3>
+                  <p class="text-sm text-gray-500">ana&#64;example.com</p>
+                </div>
+              </div>
+
+              <div class="border-t pt-4 space-y-4">
+                <div class="flex items-center justify-between">
+                  <label 
+                         class="text-sm font-medium"
+                [class.text-gray-700]="!disableBonds"
+                [class.text-gray-400]="disableBonds"
+                [class.cursor-not-allowed]="disableBonds"
+                  >
+                    Revocar Bonificaciones
+                  </label>
+                  <p-inputSwitch [(ngModel)]="checked7"
+                   [readonly]="disableBonds"
+                  [styleClass]="disableBonds ? 'visual-enabled' : ''"
+                   />
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <label
+                    class="text-sm font-medium"
+                [class.text-gray-700]="!disabledItems"
+                [class.text-gray-400]="disabledItems"
+                [class.cursor-not-allowed]="disabledItems"
+                              >
+                    Permisos No Justificados
+                  </label>
+                  <p-inputSwitch [(ngModel)]="checked8" 
+                               [readonly]="disabledItems"
+                               [styleClass]="disabledItems ? 'visual-enabled' : ''"
+                  />
+                </div>
+              </div>
+
+              <div class="flex gap-2 pt-2">
+                <p-button 
+                  icon="pi pi-pencil" 
+                  label="Editar"
+                  styleClass="p-button-text p-button-sm flex-1"
+                />
+                <p-button 
+                  icon="pi pi-trash" 
+                  label="Eliminar"
+                  styleClass="p-button-text p-button-danger p-button-sm flex-1"
+                />
+              </div>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </div>

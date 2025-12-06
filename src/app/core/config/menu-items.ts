@@ -10,5 +10,11 @@ export const MENU_ITEMS = [
       icon: 'curriculum',
       route: '/curriculum',
       roles: []
+    },
+      {
+        label: 'Bonos',
+      icon: 'curriculum',
+      route: '/bonos',
+      roles: []
     }
 ]

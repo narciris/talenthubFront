@@ -1,1 +1,160 @@
-<p>home works!</p>
+<div class="flex-1 bg-gray-50 min-h-screen p-6 lg:p-8">
+      <!-- Contenedor centrado para header y posts -->
+      <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h1 class="text-3xl font-semibold text-gray-900 mb-1">Foro</h1>
+            <p class="text-sm text-gray-600">Conecta y comparte con la comunidad profesional</p>
+          </div>
+          <div class="flex gap-3">
+            <button class="w-10 h-10 rounded-lg bg-white hover:bg-gray-100 flex items-center justify-center text-gray-600 hover:text-purple-600 transition-colors">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </button>
+            <button class="w-10 h-10 rounded-lg bg-white hover:bg-gray-100 flex items-center justify-center text-gray-600 hover:text-purple-600 transition-colors">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Posts -->
+        <div class="space-y-4">
+        <!-- Post 1 -->
+        <div class="bg-white rounded-xl shadow-sm post-card">
+          <div class="p-5">
+            <div class="flex items-start gap-3 mb-4">
+              <div class="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                AD
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold text-gray-900">Administrador</span>
+                  <span class="text-sm text-gray-500">hace 4 horas</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Tips para entrevistas técnicas exitosas</h3>
+              <p class="text-gray-700 leading-relaxed">Después de 3 años en el sector tech, quiero compartir algunos consejos que me han ayudado en entrevistas técnicas. Primero, siempre practica algoritmos básicos. Segundo, prepara preguntas sobre la empresa. Tercero, mantén la calma y disfruta el reto durante la resolución de problemas.</p>
+            </div>
+
+            <div class="flex gap-4 mb-4 pb-4 border-b border-gray-100">
+              <span class="flex items-center gap-1.5 text-sm text-gray-600">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                </svg>
+                12 likes
+              </span>
+              <span class="flex items-center gap-1.5 text-sm text-gray-600">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                5 comentarios
+              </span>
+            </div>
+
+            <!-- Comments -->
+            <div class="space-y-4 mb-4">
+              <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+                  MG
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-medium text-gray-900 text-sm">María González</span>
+                    <span class="text-xs text-gray-500">hace 3 horas</span>
+                  </div>
+                  <p class="text-sm text-gray-700">¡Excelentes consejos! Me ayudaron mucho en mi última entrevista.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+                  CR
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-medium text-gray-900 text-sm">Carlos Ruiz</span>
+                    <span class="text-xs text-gray-500">hace 45 min</span>
+                  </div>
+                  <p class="text-sm text-gray-700">Totalmente de acuerdo con el punto de pensar en voz alta.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comment Input -->
+            <div class="flex gap-3 items-center pt-4 border-t border-gray-100">
+              <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+                AD
+              </div>
+              <input 
+                type="text" 
+                placeholder="Escribe un comentario..." 
+                class="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+              >
+              <button class="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors text-sm">
+                Comentar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 2 -->
+        <div class="bg-white rounded-xl shadow-sm post-card">
+          <div class="p-5">
+            <div class="flex items-start gap-3 mb-4">
+              <div class="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                AD
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold text-gray-900">Administrador</span>
+                  <span class="text-sm text-gray-500">hace 6 horas</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">Tendencias en desarrollo web 2024</h3>
+              <p class="text-gray-700 leading-relaxed">Hola a todos, vengo a compartir artículos de desarrollo web. React sigue dominando, pero frameworks como Svelte están ganando terreno. También vemos un aumento en el uso de TypeScript y herramientas de build más rápidas como Vite.</p>
+            </div>
+
+            <div class="flex gap-4 mb-4">
+              <span class="flex items-center gap-1.5 text-sm text-gray-600">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                </svg>
+                8 likes
+              </span>
+              <span class="flex items-center gap-1.5 text-sm text-gray-600">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                3 comentarios
+              </span>
+            </div>
+
+            <!-- Comment Input -->
+            <div class="flex gap-3 items-center pt-4 border-t border-gray-100">
+              <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+                AD
+              </div>
+              <input 
+                type="text" 
+                placeholder="Escribe un comentario..." 
+                class="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+              >
+              <button class="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors text-sm">
+                Comentar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,34 @@
+/* Opción 1: Aumentar especificidad sin ::ng-deep */
+:host {
+  --p-card-background: #E3D8EB;
+  --p-toggleswitch-background: #C7C3C3;
+  --p-toggleswitch-handle-checked-background: #fff;
+  --p-toggleswitch-checked-background: #C3A0D9;
+ 
+}
+:host ::ng-deep .visual-enabled {
+  opacity: 1 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Aplica opacidad reducida a los elementos internos */
+/* :host ::ng-deep .visual-enabled .p-inputswitch-slider {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+} */
+
+/* :host ::ng-deep .visual-enabled .p-inputswitch-slider::before {
+  opacity: 0.5 !important; 
+} */
+
+/* O aplica opacidad a TODO el componente incluyendo hijos */
+:host ::ng-deep .visual-enabled * {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+/* label.visual-enabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  color: #9ca3af !important; 
+} */

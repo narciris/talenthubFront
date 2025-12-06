@@ -31,13 +31,18 @@ export const routes: Routes = [
       },
       {
         path: 'curriculum',
-        canActivate:[authGuard],
+        // canActivate:[authGuard],
         loadChildren: () => import('./features/curriculum/curriculum.routes').then(m => m.CURRICULUM_ROUTES)
       },
       {
         path: 'foro',
-        canActivate:[authGuard],
+        // canActivate:[authGuard],
         loadChildren: () => import('./features/forum/forum.routes').then(m => m.FORUM_ROUTES)
+      },
+        {
+        path: 'bonos',
+        // canActivate:[authGuard],
+        loadChildren: () => import('./features/bonificaciones/bonos.routes').then(m => m.BONOS_ROUTES)
       }
     ]
   },

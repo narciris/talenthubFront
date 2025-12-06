@@ -48,3 +48,13 @@
 .bg-gradient-primary {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
 }
+
+:host ::ng-deep .p-inputswitch.p-disabled,
+:host ::ng-deep .p-inputswitch.p-disabled .p-inputswitch-slider,
+:host ::ng-deep .p-inputswitch.p-disabled .p-inputswitch-handle {
+  opacity: 1 !important;
+  filter: none !important;
+  box-shadow: none !important;
+  background-color: inherit !important; 
+  pointer-events: none !important;
+}
